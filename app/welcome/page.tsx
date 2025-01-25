@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import Person from "../components/person";
+import ThemeToggle from "../components/ThemeToggle";
 
 interface User {
   first_name: string;
@@ -203,7 +204,7 @@ const removeUser = async(id:number) => {
     <div className="mx-5 mt-5" >
       <div className="flex"> 
         <h1>Welcome {username}</h1>
-        <div className="ml-auto"><a className='underline text-blue-400' href="/register" onClick={(e) => handleLogout(e, "/register")}>Logout</a></div></div>
+        <div className="ml-auto flex items-center"><div><ThemeToggle/></div><a className='pl-3 underline text-blue-400' href="/register" onClick={(e) => handleLogout(e, "/register")}>Logout</a></div></div>
      
      <div className="flex w-full">
       <div className="pt-2">List Users</div><div className="pl-2 pt-2 flex justify-center items-center">Page {page}</div><div className="pt-2 pl-3"><button onClick={() => openCreateModal()}>Create User</button></div>
