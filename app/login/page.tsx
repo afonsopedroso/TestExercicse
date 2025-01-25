@@ -1,16 +1,28 @@
 'use client'
 import React from 'react'
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 
 const LoginPage = () => {
-    const [username, setUsername] = useState('');
-const [password, setPassword] = useState('');
+    if(sessionStorage.getItem('isAuth') == 'true'){
+        redirect("/welcome")
+    }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const router = useRouter();
+    const [username, setUsername] = useState<string | null>("");
 
+  
+  const handleReplace = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, path: string) => {
+    event.preventDefault(); 
+    router.replace(path);
+  };
   const handleLogin = async (e: any) => {
     e.preventDefault();
 
-    if (!username || !password) {
+    if (!email || !password) {
       alert('Please fill in both username and password.');
       return;
     }
@@ -21,13 +33,16 @@ const [password, setPassword] = useState('');
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
         alert('Login successful!');
+        sessionStorage.setItem('isAuth', 'true')
+        sessionStorage.setItem('username', email)
+        router.replace('/welcome'); 
         console.log(result);
       } else {
         alert(result.message || 'Login failed.');
@@ -45,8 +60,8 @@ const [password, setPassword] = useState('');
           <span className="pr-2">Username:</span>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </label>
@@ -62,6 +77,7 @@ const [password, setPassword] = useState('');
         </label>
         <br />
         <button type="submit">Login</button>
+        <div>New User? <a className='underline text-blue-400' href="/register" onClick={(e) => handleReplace(e, "/register")}>Register</a></div>
       </form>
     </div>
   )

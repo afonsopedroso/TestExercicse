@@ -1,20 +1,31 @@
 "use client"
 import React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { redirect } from "next/navigation";
 
 
 
 const RegisterPage = () => {
-  const [username, setUsername] = useState('');
+    if(sessionStorage.getItem('isAuth') == 'true'){
+        redirect("/welcome")
+    }
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [retypepassword, setRetypePassword] = useState('');
   const router = useRouter();
+    const [username, setUsername] = useState("");
+
+ 
+  const handleReplace = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>, path: string) => {
+    event.preventDefault(); 
+    router.replace(path);
+  };
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
 
-    if (!username || !password) {
+    if (!email || !password) {
       alert('Please fill in both username and password.');
       return;
     }
@@ -24,19 +35,24 @@ const RegisterPage = () => {
       return;
     }
 
+ 
     try {
       const response = await fetch('https://reqres.in/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
         alert('Register successful!');
+        sessionStorage.setItem('isAuth', 'true')
+        sessionStorage.setItem('username', email)
+        router.replace('/welcome'); 
+
         console.log(result);
 
       } else {
@@ -54,8 +70,8 @@ const RegisterPage = () => {
           <span className="pr-2">Username:</span>
           <input
             type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
         </label>
@@ -81,6 +97,10 @@ const RegisterPage = () => {
         </label>
         <br />
         <button type="submit">Register</button>
+        <div>
+        <span>Already a user? <a className='underline text-blue-400' href="/login" onClick={(e) => handleReplace(e, "/login")}>Sign In</a> instead</span>
+
+        </div>
       </form>
     </div>
   )

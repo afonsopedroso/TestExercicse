@@ -15,7 +15,8 @@ export default function Home() {
   useEffect(() => {
     if (!sessionStorage.getItem('isAuth')) {
       router.replace('/register'); // Redirect to Register page
-    }
+    }else 
+    router.replace("/welcome")
   }, [sessionStorage.getItem('isAuth'), router]);
 
   // Render only if logged in
