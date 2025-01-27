@@ -1,4 +1,4 @@
-'use client'
+'use cl'
 import React from "react";
 import { useTheme } from "../context/ThemeContext";
 

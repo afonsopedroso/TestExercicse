@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import Person from "../components/person";
 import ThemeToggle from "../components/ThemeToggle";
+import { redirect } from "next/navigation";
 
 interface User {
   first_name: string;
@@ -23,6 +24,9 @@ interface ListUsers {
 }
 
 export default function WelcomePage() {
+  if(!sessionStorage.getItem('isAuth')){
+        redirect("/login")
+  }
   const [username, setUsername] = useState("");
   const [editMode, setEditMode] = useState(false)
   const [createMode, setCreateMode] = useState(false)
@@ -45,7 +49,9 @@ export default function WelcomePage() {
   const router = useRouter();
   const [listUsers, setListUsers] = useState<ListUsers | null>(null);
 
+
   useEffect(() => {
+    
     const storedUsername = sessionStorage.getItem("username");
     setUsername(storedUsername || "");
     fetchUsers(page)

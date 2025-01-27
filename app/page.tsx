@@ -11,12 +11,22 @@ interface User{
 }
 export default function Home() {
  const router = useRouter();
-
   useEffect(() => {
+    const session = sessionStorage.getItem("isAuth");
+    console.log("SESSION", session)
+    if (!session) {
+      router.replace("/login");
+    }
+  }, [router]);
+  useEffect(() => {
+    console.log("SESSION", 1)
     if (!sessionStorage.getItem('isAuth')) {
       router.replace('/register'); // Redirect to Register page
-    }else 
-    router.replace("/welcome")
+    }else {
+      console.log("lala", 1)
+          router.replace("/welcome")
+
+    }
   }, [sessionStorage.getItem('isAuth'), router]);
 
   // Render only if logged in
